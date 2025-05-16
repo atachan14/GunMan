@@ -5,64 +5,86 @@ public enum CameraMode { None, Opening, TPS, FPS, TransitionToFPS, TransitionToT
 
 public class CameraController : MonoBehaviour
 {
+    [Header("Anchor Points")]
     public Transform tpsAnchor;
     public Transform eyeAnchor;
     public Transform openingAnchor;
+
+    [Header("Look Targets")]
     public Transform centerPoint;
     public Transform muzzlePoint;
 
+    [Header("Settings")]
+    public float transilateSpeed = 5f;
 
-    public float moveSpeed = 5f;
-    private CameraMode mode = CameraMode.None;
+    public CameraMode mode = CameraMode.None;
+    private Transform lookTarget;
+    private Coroutine transitionRoutine;
+
+    public bool IsOpening => mode == CameraMode.Opening;
+    public bool IsTPS => mode == CameraMode.TPS;
+    public bool IsFPS => mode == CameraMode.FPS;
 
     void Update()
     {
+       
+    }
+
+    public void SwitchToMode(CameraMode newMode)
+    {
+        if (transitionRoutine != null)
+        {
+            StopCoroutine(transitionRoutine);
+        }
+
+        mode = newMode;
+
         switch (mode)
         {
             case CameraMode.Opening:
-                SetParentAndLook(openingAnchor, centerPoint);
+                SnapToParent(openingAnchor, centerPoint);
                 break;
             case CameraMode.TPS:
-                SetParentAndLook(tpsAnchor, centerPoint);
+                SnapToParent(tpsAnchor, centerPoint);
                 break;
             case CameraMode.FPS:
-                SetParentAndLook(eyeAnchor, muzzlePoint);
+                SnapToParent(eyeAnchor, muzzlePoint);
                 break;
             case CameraMode.TransitionToFPS:
-                MoveTo(eyeAnchor.position, eyeAnchor);
+                transitionRoutine = StartCoroutine(TransitionTo(eyeAnchor, muzzlePoint, CameraMode.FPS));
                 break;
             case CameraMode.TransitionToTPS:
-                MoveTo(tpsAnchor.position, centerPoint);
+                transitionRoutine = StartCoroutine(TransitionTo(tpsAnchor, centerPoint, CameraMode.TPS));
                 break;
         }
     }
 
-
-    void SetParentAndLook(Transform target, Transform lookPoint)
+    void SnapToParent(Transform parentTarget, Transform look)
     {
-
-        if (transform.parent != target)
-        {
-            transform.SetParent(target);
-            transform.localPosition = Vector3.zero;
-            transform.localRotation = Quaternion.identity;
-        }
-        transform.LookAt(lookPoint);
-
+        transform.SetParent(parentTarget);
+        transform.localPosition = Vector3.zero;
+        transform.localRotation = Quaternion.identity;
+        lookTarget = look;
     }
 
-    void MoveTo(Vector3 targetPos, Transform lookPoint)
+    IEnumerator TransitionTo(Transform targetPos, Transform look, CameraMode nextMode)
     {
-        transform.position = Vector3.MoveTowards(transform.position, targetPos, moveSpeed * Time.deltaTime);
-        transform.LookAt(lookPoint);
+        transform.SetParent(null);
+        lookTarget = look;
 
-        // 完全に移動完了したらモードを切り替え
-        if (Vector3.Distance(transform.position, targetPos) < 0.01f)
+        while (Vector3.Distance(transform.position, targetPos.position) > 0.01f)
         {
-            mode = (targetPos == eyeAnchor.position) ? CameraMode.FPS : CameraMode.TPS;
+            transform.position = Vector3.MoveTowards(transform.position, targetPos.position, transilateSpeed * Time.deltaTime);
+            transform.LookAt(lookTarget);
+            yield return null;
         }
+
+        // 完全に移動完了後、次のモードにスイッチ
+        SwitchToMode(nextMode);
     }
-    public void SwitchToOpening() => mode = CameraMode.Opening;
-    public void SwitchToFPS() => mode = CameraMode.TransitionToFPS;
-    public void SwitchToTPS() => mode = CameraMode.TransitionToTPS;
+
+    // ショートカット用
+    public void SwitchToOpening() => SwitchToMode(CameraMode.Opening);
+    public void SwitchToFPS() => SwitchToMode(CameraMode.TransitionToFPS);
+    public void SwitchToTPS() => SwitchToMode(CameraMode.TransitionToTPS);
 }
