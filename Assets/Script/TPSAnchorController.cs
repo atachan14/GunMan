@@ -10,7 +10,6 @@ public class TPSAnchorController : MonoBehaviour
         if (isRotating)
         {
             transform.Rotate(Vector3.up, rotationSpeed * Time.deltaTime);
-            Debug.Log("isRotating");
         }
 
     }
