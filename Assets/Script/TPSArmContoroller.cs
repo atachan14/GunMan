@@ -1,9 +1,11 @@
+using Unity.Burst.Intrinsics;
 using UnityEngine;
 
 public class ArmController : MonoBehaviour
 {
     [SerializeField] Transform shoulder; // arm_stretch.r
-    [SerializeField] Transform target;   // MouseNaviのTransform（CanvasじゃなくWorld位置のやつ）
+    [SerializeField] Transform shoulderVectorStart;
+    [SerializeField] Transform mouseNavi;   // MouseNaviのTransform（CanvasじゃなくWorld位置のやつ）
     [SerializeField] CameraController cameraController;
 
     [SerializeField] float sensitivity = 1f;
@@ -25,17 +27,11 @@ public class ArmController : MonoBehaviour
 
     void TPSArmControll()
     {
-        // 肩からターゲットへの方向ベクトル
-        Vector3 dir = target.position - shoulder.position;
-
-        // ローカル空間に変換して、回転角度だけをXとして使う
-        Vector3 localDir = shoulder.parent.InverseTransformDirection(dir.normalized);
-
-        // YZ平面上の角度だけをXに使う（ピッチ方向）
-        float angleX = Mathf.Atan2(localDir.y, localDir.z) * Mathf.Rad2Deg;
-
-        // 回転を直接反映（ZやYは今は無視）
-        shoulder.localRotation = Quaternion.Euler(-angleX, 0, 0);
+        Vector3 dir = (mouseNavi.position - shoulder.position).normalized;
+        Quaternion targetRot = Quaternion.LookRotation(dir);
+        // Xを正面にするためにY軸で-90度ずらす
+        targetRot *= Quaternion.Euler(0, 0, 0);
+        shoulder.rotation = targetRot;
     }
 
     void FPSArmControll()
