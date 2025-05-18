@@ -12,11 +12,8 @@ public enum NaviMode
 
 public class MouseNaviController : MonoBehaviour
 {
-    [SerializeField] CameraController cameraController;
-    Camera mainCam;
-
-    public Image cursorImage;
-    public RectTransform rectTransform;
+    [SerializeField] Transform Shoulder;
+    public SpriteRenderer sr;
     readonly Dictionary<NaviMode, Color> modeColors = new()
     {
         { NaviMode.OnGetGun, new Color(0f, 1f, 0f, 0.3f) },     // 緑・半透明
@@ -25,59 +22,32 @@ public class MouseNaviController : MonoBehaviour
         { NaviMode.NotTPS, Color.clear }                       // 完全透明
     };
 
-    public NaviMode CurrentMode { get; private set; }
-    public bool IsOnGetGun => CurrentMode == NaviMode.OnGetGun;
-    public bool IsOnArmReach => CurrentMode == NaviMode.OnArmReach;
+    public NaviMode Mode { get; private set; }
+    public bool IsOnGetGun => Mode == NaviMode.OnGetGun;
+    public bool IsOnArmReach => Mode == NaviMode.OnArmReach;
 
 
 
 
-    void Start()
-    {
-        Cursor.visible = false;
-        mainCam = Camera.main;
-    }
 
     void Update()
     {
         FollowMouse();
-        UpdateMode();
         UpdateColor();
     }
 
     void FollowMouse()
     {
-        rectTransform.position = Input.mousePosition;
-    }
+        Vector3 screenPos = Input.mousePosition;
+        screenPos.z = Mathf.Abs(Camera.main.transform.position.z - Shoulder.position.z); // ここ！zを先に決める！
 
-    void UpdateMode()
-    {
-        if (cameraController.IsTPS)
-        {
-            Ray ray = mainCam.ScreenPointToRay(Input.mousePosition);
-            if (Physics.Raycast(ray, out var hit))
-            {
-                if (hit.collider.CompareTag("GetGun"))
-                    CurrentMode = NaviMode.OnGetGun;
-                else if (hit.collider.CompareTag("ArmReach"))
-                    CurrentMode = NaviMode.OnArmReach;
-                else
-                    CurrentMode = NaviMode.TooFar;
-            }
-            else
-            {
-                CurrentMode = NaviMode.TooFar;
-            }
-        }
-        else
-        {
-            CurrentMode = NaviMode.NotTPS;
-        }
-    }
+        Vector3 worldPos = Camera.main.ScreenToWorldPoint(screenPos);
+        transform.position = worldPos;
 
+    }
 
     void UpdateColor()
     {
-        cursorImage.color = modeColors[CurrentMode];
+        sr.color = modeColors[Mode];
     }
 }

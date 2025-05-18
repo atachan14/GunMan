@@ -1,7 +1,6 @@
 using System.Collections;
 using UnityEngine;
 
-public enum CameraMode { None, Opening, TPS, FPS, TransitionToFPS, TransitionToTPS }
 
 public class CameraController : MonoBehaviour
 {
@@ -17,44 +16,38 @@ public class CameraController : MonoBehaviour
     [Header("Settings")]
     public float transilateSpeed = 5f;
 
-    public CameraMode mode = CameraMode.None;
     private Transform lookTarget;
     private Coroutine transitionRoutine;
 
-    public bool IsOpening => mode == CameraMode.Opening;
-    public bool IsTPS => mode == CameraMode.TPS;
-    public bool IsFPS => mode == CameraMode.FPS;
-
-    void Update()
+    private void OnEnable()
     {
-       
+        RoundManager.OnModeChanged += OnModeChanged;
     }
 
-    public void SwitchToMode(CameraMode newMode)
+    private void OnDisable()
+    {
+        RoundManager.OnModeChanged -= OnModeChanged;
+    }
+
+    public void OnModeChanged(RoundMode newMode)
     {
         if (transitionRoutine != null)
         {
             StopCoroutine(transitionRoutine);
         }
 
-        mode = newMode;
-
-        switch (mode)
+        switch (newMode)
         {
-            case CameraMode.Opening:
+            case RoundMode.Opening:
                 SnapToParent(openingAnchor, centerPoint);
                 break;
-            case CameraMode.TPS:
-                SnapToParent(tpsAnchor, centerPoint);
+
+            case RoundMode.TPS:
+                transitionRoutine = StartCoroutine(TransitionTo(tpsAnchor, centerPoint));
                 break;
-            case CameraMode.FPS:
-                SnapToParent(eyeAnchor, muzzlePoint);
-                break;
-            case CameraMode.TransitionToFPS:
-                transitionRoutine = StartCoroutine(TransitionTo(eyeAnchor, muzzlePoint, CameraMode.FPS));
-                break;
-            case CameraMode.TransitionToTPS:
-                transitionRoutine = StartCoroutine(TransitionTo(tpsAnchor, centerPoint, CameraMode.TPS));
+
+            case RoundMode.FPS:
+                transitionRoutine = StartCoroutine(TransitionTo(eyeAnchor, muzzlePoint));
                 break;
         }
     }
@@ -67,7 +60,7 @@ public class CameraController : MonoBehaviour
         lookTarget = look;
     }
 
-    IEnumerator TransitionTo(Transform targetPos, Transform look, CameraMode nextMode)
+    IEnumerator TransitionTo(Transform targetPos, Transform look)
     {
         transform.SetParent(null);
         lookTarget = look;
@@ -79,12 +72,7 @@ public class CameraController : MonoBehaviour
             yield return null;
         }
 
-        // 完全に移動完了後、次のモードにスイッチ
-        SwitchToMode(nextMode);
+        SnapToParent(targetPos, look);
     }
 
-    // ショートカット用
-    public void SwitchToOpening() => SwitchToMode(CameraMode.Opening);
-    public void SwitchToFPS() => SwitchToMode(CameraMode.TransitionToFPS);
-    public void SwitchToTPS() => SwitchToMode(CameraMode.TransitionToTPS);
 }

@@ -11,11 +11,6 @@ public class ButtonInputManager : MonoBehaviour
         if (mouseNavi.IsOnGetGun && Input.GetMouseButtonDown(1))
         {
             GrabGun();
-            cameraController.SwitchToFPS();
-        }
-        if (cameraController.IsFPS && Input.GetMouseButtonUp(1))
-        {
-            cameraController.SwitchToTPS();
         }
     }
 

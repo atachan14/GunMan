@@ -1,11 +1,8 @@
+using System.Collections;
 using UnityEngine;
 
-public class TPSAnchorController : MonoBehaviour
+public class OpeningActor : MonoBehaviour
 {
-    public bool isRotating = false;
-    public float rotationSpeed;
-
-   
     private void OnEnable()
     {
         RoundManager.OnModeChanged += HandleRoundModeChanged;
@@ -20,21 +17,16 @@ public class TPSAnchorController : MonoBehaviour
     {
         if (mode == RoundMode.Opening)
         {
-            isRotating = false;
-        }
-        else
-        {
-            isRotating = true;
+            Debug.Log("OpeningActor");
+            StartCoroutine(Act());
         }
     }
 
-    void Update()
+    IEnumerator Act()
     {
-        if (isRotating)
-        {
-            transform.Rotate(Vector3.up, rotationSpeed * Time.deltaTime);
-        }
 
+        yield return new WaitForSeconds(3);
+        RoundManager.Instance.Mode=RoundMode.TPS;
+        Debug.Log("OpeningActor end");
     }
-
 }

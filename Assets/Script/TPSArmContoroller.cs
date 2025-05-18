@@ -14,12 +14,12 @@ public class ArmController : MonoBehaviour
 
     void LateUpdate()
     {
-        if (cameraController.IsTPS)
+        if (RoundManager.Instance.IsTPS)
         {
             TPSArmControll();
         }
 
-        if (cameraController.IsFPS)
+        if (RoundManager.Instance.IsFPS)
         {
             FPSArmControll();
         }

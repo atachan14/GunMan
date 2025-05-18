@@ -1,27 +1,51 @@
+using System;
 using System.Collections;
 using UnityEngine;
-
+using UnityEngine.InputSystem.XR;
+public enum RoundMode
+{
+    None,
+    Opening,
+    TPS,
+    FPS,
+    ShotFire,
+    BulletTime,
+    GotShot,
+    Replay,
+    Result
+}
 public class RoundManager : MonoBehaviour
 {
-    [SerializeField] CameraController cameraController;
-    [SerializeField] TPSAnchorController tpsAnchor;
-    IEnumerator Start()
+    public static RoundManager Instance;
+    [SerializeField] OpeningActor openingActor;
+
+    public static event Action<RoundMode> OnModeChanged;
+
+    private RoundMode _mode = RoundMode.None;
+    public RoundMode Mode
     {
-        yield return StartCoroutine(PlayStartCutscene());
-        PlayStartTPS();
+        get => _mode;
+        set
+        {
+            if (_mode == value) return;
+            _mode = value;
+            Debug.Log("mode•ÏX”­‰ÎI");
+            OnModeChanged?.Invoke(_mode);
+        }
     }
 
-    IEnumerator PlayStartCutscene()
+    public bool IsTPS => _mode == RoundMode.TPS;
+    public bool IsFPS => _mode == RoundMode.FPS;
+
+
+    private void Awake()
     {
-       
-        cameraController.SwitchToOpening();
-        yield return new WaitForSeconds(3f);
+        Instance = this;
     }
 
-    void PlayStartTPS()
+    void Start()
     {
-        cameraController.SwitchToTPS();
-        tpsAnchor.isRotating = true;
+        Mode = RoundMode.Opening;
     }
 
 
