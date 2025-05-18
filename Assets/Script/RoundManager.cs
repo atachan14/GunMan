@@ -36,10 +36,16 @@ public class RoundManager : MonoBehaviour
 
     public bool IsTPS => _mode == RoundMode.TPS;
     public bool IsFPS => _mode == RoundMode.FPS;
-
+    public bool IsReplay => _mode == RoundMode.Replay; 
 
     private void Awake()
     {
+        if (Instance != null)
+        {
+            Debug.LogError($"[RoundManager] 2個目生成されたのでDestroyします。Editorに戻って構造確認せぇ！");
+            Destroy(gameObject); // 複数あったら潰す
+            return;
+        }
         Instance = this;
     }
 

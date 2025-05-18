@@ -2,7 +2,7 @@ using UnityEngine;
 
 public class ButtonInputManager : MonoBehaviour
 {
-    [SerializeField] MouseNaviController mouseNavi;
+    [SerializeField] ArmNaviController mouseNavi;
     [SerializeField] CameraController cameraController;
     [SerializeField] Transform gun;
     [SerializeField] Transform hand;
