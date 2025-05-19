@@ -1,4 +1,5 @@
 using Unity.Burst.Intrinsics;
+using Unity.VisualScripting;
 using Unity.VisualScripting.Dependencies.Sqlite;
 using UnityEngine;
 
@@ -6,12 +7,13 @@ public class AimController : MonoBehaviour
 {
     [SerializeField] Transform shoulder; // arm_stretch.r
     [SerializeField] Transform body;
+    [SerializeField] Transform shoulderRoll;
     [SerializeField] Transform mouseNavi;   // MouseNaviのTransform（CanvasじゃなくWorld位置のやつ）
     [SerializeField] CameraController cameraController;
 
     //fps↓
     [SerializeField] float sensitivity = 5f; // 好きに調整して
-    float xRotation = 0f;
+    float zRotation = 0f;
     float yRotation = 0f;
 
 
@@ -46,17 +48,13 @@ public class AimController : MonoBehaviour
     void FPSArmControll()
     {
         float mouseY = InputMouse.Instance.Y;
+        zRotation -= mouseY * sensitivity;
+        zRotation = Mathf.Clamp(zRotation, -180f, 90f);
 
-        xRotation += mouseY * sensitivity; 
-        xRotation = Mathf.Clamp(xRotation, -90f, 90f);  // ここで上下の制限
-
-        // 水平軸はカメラの右方向ベクトル
-        Vector3 right = cameraController.transform.right;
-
-        // Quaternionで制限付きの回転を適用
-        shoulder.localRotation = Quaternion.AngleAxis(xRotation, right);
-
+        Vector3 current = shoulder.localEulerAngles;
+        shoulder.localEulerAngles = new Vector3(current.x, current.y, zRotation);
     }
+
 
     void FPSBodyControll()
     {
@@ -79,13 +77,12 @@ public class AimController : MonoBehaviour
     {
         RoundManager.OnModeChanged -= HandleRoundModeChanged;
     }
-    
+
     private void HandleRoundModeChanged(RoundMode mode)
     {
         if (mode == RoundMode.FPS)
         {
-            Vector3 currentEuler = shoulder.localEulerAngles;
-            xRotation = NormalizeAngle(currentEuler.x); // ← これで初期値を今の腕の角度に揃える
+            zRotation = shoulder.localEulerAngles.z; // ← Normalizeしない！！！
         }
     }
     float NormalizeAngle(float angle)

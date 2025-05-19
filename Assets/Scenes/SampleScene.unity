@@ -1814,7 +1814,7 @@ GameObject:
   m_Component:
   - component: {fileID: 3192058734365544806}
   m_Layer: 0
-  m_Name: rollArm
+  m_Name: shoulderRoll
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -3322,7 +3322,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6499230986347802060}
   serializedVersion: 2
-  m_LocalRotation: {x: -0.3826503, y: 0.0050393157, z: 0.012165672, w: 0.9237994}
+  m_LocalRotation: {x: -0.38265026, y: 0.005039225, z: 0.012165765, w: 0.92379946}
   m_LocalPosition: {x: 0, y: 0.15994059, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -4273,6 +4273,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   shoulder: {fileID: 6236978138201972582}
   body: {fileID: 2580180134733508829}
+  shoulderRoll: {fileID: 3192058734365544806}
   mouseNavi: {fileID: 261003924}
   cameraController: {fileID: 330585548}
   sensitivity: 5

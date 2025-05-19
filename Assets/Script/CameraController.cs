@@ -47,7 +47,7 @@ public class CameraController : MonoBehaviour
                 break;
 
             case RoundMode.FPS:
-                //transitionRoutine = StartCoroutine(TransitionTo(eyeAnchor, muzzlePoint));
+                transitionRoutine = StartCoroutine(TransitionTo(eyeAnchor, muzzlePoint));
                 break;
         }
     }
