@@ -34,6 +34,7 @@ public class RoundManager : MonoBehaviour
         }
     }
 
+    public bool IsOpening => _mode == RoundMode.Opening;
     public bool IsTPS => _mode == RoundMode.TPS;
     public bool IsFPS => _mode == RoundMode.FPS;
     public bool IsReplay => _mode == RoundMode.Replay; 

@@ -1,9 +1,14 @@
 using UnityEngine;
 
-public class InputPosition : MonoBehaviour
+public class InputMouse : MonoBehaviour
 {
-    public static InputPosition Instance;
+    public static InputMouse Instance;
     public Vector3 Position { get; private set; }
+
+    public Vector2 Axis { get; private set; }
+    public float X => Axis.x;
+    public float Y => Axis.y;
+
 
     private void Awake()
     {
@@ -27,6 +32,7 @@ public class InputPosition : MonoBehaviour
         if (!RoundManager.Instance.IsReplay)
         {
             Position = Input.mousePosition;
+            Axis = new Vector2(Input.GetAxis("Mouse X"), Input.GetAxis("Mouse Y"));
             //ReplayManager.Instance.RecordPosition(position);
         }
         else

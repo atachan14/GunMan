@@ -12,13 +12,13 @@ public enum NaviMode
 
 public class ArmNaviController : MonoBehaviour
 {
-    [SerializeField] Transform Shoulder;
+    [SerializeField] Transform Gun;
     public Image MouseNaviImage;
     readonly Dictionary<NaviMode, Color> modeColors = new()
     {
         { NaviMode.OnGunReach, new Color(0f, 1f, 0f, 0.3f) },     // 緑・半透明
-        { NaviMode.OnArmReach, new Color(1f, 1f, 1f, 0.3f) },   // 白・半透明
-        { NaviMode.TooFar, new Color(0f, 0f, 1f, 0.3f) },       // 青・半透明
+        { NaviMode.OnArmReach, new Color(0f, 0f, 1f, 0.3f) },   // 青・半透明
+        { NaviMode.TooFar, new Color(1f, 1f, 1f, 0.3f) },       // 白・半透明
         { NaviMode.NotTPS, Color.clear }                       // 完全透明
     };
 
@@ -32,7 +32,10 @@ public class ArmNaviController : MonoBehaviour
 
     void Update()
     {
-        if (!RoundManager.Instance.IsTPS) return;
+        if (!RoundManager.Instance.IsTPS)
+        {
+            Mode = NaviMode.NotTPS;
+        }
 
         FollowMouse();
         UpdateColor();
@@ -40,10 +43,10 @@ public class ArmNaviController : MonoBehaviour
 
     void FollowMouse()
     {
-        MouseNaviImage.transform.position = InputPosition.Instance.Position;
+        MouseNaviImage.transform.position = InputMouse.Instance.Position;
 
-        Vector3 screenPos = InputPosition.Instance.Position;
-        screenPos.z = Mathf.Abs(Camera.main.transform.position.z - Shoulder.position.z); // ここ！zを先に決める！
+        Vector3 screenPos = InputMouse.Instance.Position;
+        screenPos.z = Mathf.Abs(Camera.main.transform.position.z - Gun.position.z); // ここ！zを先に決める！
 
         Vector3 worldPos = Camera.main.ScreenToWorldPoint(screenPos);
         transform.position = worldPos;
@@ -68,7 +71,7 @@ public class ArmNaviController : MonoBehaviour
 
     private void OnTriggerExit(Collider other)
     {
-        if (other.CompareTag("ArmReach"))
+        if (other.CompareTag("GunReach") || other.CompareTag("ArmReach"))
         {
             Mode = NaviMode.TooFar;
         }

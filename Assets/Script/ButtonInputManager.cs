@@ -17,5 +17,6 @@ public class ButtonInputManager : MonoBehaviour
     void GrabGun()
     {
         gun.SetParent(hand);
+        RoundManager.Instance.Mode = RoundMode.FPS;
     }
 }
