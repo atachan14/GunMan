@@ -7,18 +7,20 @@ public class AimController : MonoBehaviour
 {
     [SerializeField] Transform shoulder; // arm_stretch.r
     [SerializeField] Transform body;
-    [SerializeField] Transform shoulderRoll;
+    [SerializeField] Transform hand;
     [SerializeField] Transform mouseNavi;   // MouseNaviのTransform（CanvasじゃなくWorld位置のやつ）
     [SerializeField] CameraController cameraController;
 
     //fps↓
     [SerializeField] float sensitivity = 5f; // 好きに調整して
-    float zRotation = 0f;
+    float shoulderRotationX = 0f;
+    float handRotationY = 0f;
     float yRotation = 0f;
 
 
     void LateUpdate()
     {
+
         if (RoundManager.Instance.IsTPS)
         {
             TPSArmControll();
@@ -27,6 +29,7 @@ public class AimController : MonoBehaviour
         if (RoundManager.Instance.IsFPS)
         {
             FPSArmControll();
+            FPSHandControll();
             FPSBodyControll();
         }
     }
@@ -48,11 +51,21 @@ public class AimController : MonoBehaviour
     void FPSArmControll()
     {
         float mouseY = InputMouse.Instance.Y;
-        zRotation -= mouseY * sensitivity;
-        zRotation = Mathf.Clamp(zRotation, -180f, 90f);
+        shoulderRotationX += mouseY * sensitivity;
+        shoulderRotationX = Mathf.Clamp(shoulderRotationX, -180f, 90f);
 
         Vector3 current = shoulder.localEulerAngles;
-        shoulder.localEulerAngles = new Vector3(current.x, current.y, zRotation);
+        shoulder.localEulerAngles = new Vector3(shoulderRotationX, current.y, current.z);
+    }
+
+    void FPSHandControll()
+    {
+        float mouseY = InputMouse.Instance.Y;
+        handRotationY -= mouseY * sensitivity;
+        handRotationY = Mathf.Clamp(handRotationY, -180f, 180f);
+
+        Vector3 current = hand.localEulerAngles;
+        hand.localEulerAngles = new Vector3(current.x, handRotationY, current.z);
     }
 
 
@@ -82,7 +95,8 @@ public class AimController : MonoBehaviour
     {
         if (mode == RoundMode.FPS)
         {
-            zRotation = shoulder.localEulerAngles.z; // ← Normalizeしない！！！
+            shoulderRotationX = NormalizeAngle(shoulder.localEulerAngles.x);
+            handRotationY = NormalizeAngle(hand.localEulerAngles.y);
         }
     }
     float NormalizeAngle(float angle)

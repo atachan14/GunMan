@@ -32,7 +32,7 @@ public class ArmNaviController : MonoBehaviour
 
     void Update()
     {
-        if (!RoundManager.Instance.IsTPS)
+        if (!RoundManager.Instance.IsTPS&&!RoundManager.Instance.IsOpening)
         {
             Mode = NaviMode.NotTPS;
         }
@@ -67,6 +67,7 @@ public class ArmNaviController : MonoBehaviour
         {
             Mode = NaviMode.OnArmReach;
         }
+      
     }
 
     private void OnTriggerExit(Collider other)

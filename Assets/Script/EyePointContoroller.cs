@@ -7,5 +7,6 @@ public class EyePointContoroller : MonoBehaviour
     void Update()
     {
         transform.LookAt(muzzlePoint);
+
     }
 }
