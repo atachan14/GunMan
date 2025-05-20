@@ -51,10 +51,7 @@ public class ButtonInputManager : MonoBehaviour
         gun.transform.parent = null; // 完全に親から外す
         gunRb.isKinematic = false;   // 物理演算ON
         gunRb.useGravity = true;     // 重力ON
-        gunRb.velocity = Vector3.zero;
-        gunRb.angularVelocity = Vector3.zero;
-        gun.transform.position += Vector3.up * 0.2f; // 地面めり込み防止
-        gunRb.WakeUp();              // 強制で動かす
+        gunRb.interpolation = RigidbodyInterpolation.None;
 
         RoundManager.Instance.Mode = RoundMode.TPS;
     }
