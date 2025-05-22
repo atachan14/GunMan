@@ -6,7 +6,7 @@ public class CameraController : MonoBehaviour
 {
     [Header("Anchor Points")]
     public Transform tpsAnchor;
-    public Transform eyeAnchor;
+    public Transform FPSAnchor;
     public Transform openingAnchor;
 
     [Header("Look Targets")]
@@ -47,7 +47,7 @@ public class CameraController : MonoBehaviour
                 break;
 
             case RoundMode.FPS:
-                //transitionRoutine = StartCoroutine(TransitionTo(eyeAnchor, muzzlePoint));
+                transitionRoutine = StartCoroutine(TransitionTo(FPSAnchor, centerPoint));
                 break;
         }
     }

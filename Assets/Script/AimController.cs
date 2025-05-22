@@ -8,6 +8,7 @@ public class AimController : MonoBehaviour
     [SerializeField] Transform shoulder; // arm_stretch.r
     [SerializeField] Transform body;
     [SerializeField] Transform hand;
+    [SerializeField] Transform neck;
     [SerializeField] Transform mouseNavi;   // MouseNaviのTransform（CanvasじゃなくWorld位置のやつ）
     [SerializeField] CameraController cameraController;
 
@@ -15,7 +16,8 @@ public class AimController : MonoBehaviour
     [SerializeField] float sensitivity = 5f; // 好きに調整して
     float shoulderRotationX = 0f;
     float handRotationY = 0f;
-    float yRotation = 0f;
+    float BodyRotationY = 0f;
+    float NeckRotationY = 0f;
 
 
     void LateUpdate()
@@ -31,6 +33,7 @@ public class AimController : MonoBehaviour
             FPSArmControll();
             FPSHandControll();
             FPSBodyControll();
+            FPSNeckControll();
         }
     }
 
@@ -73,12 +76,21 @@ public class AimController : MonoBehaviour
     {
         float mouseX = InputMouse.Instance.X;
 
-        yRotation += mouseX * sensitivity;
+        BodyRotationY += mouseX * sensitivity;
 
         // 回転をY軸方向に反映（体は地面に対して水平回転）
-        body.localRotation = Quaternion.Euler(0f, yRotation, 0f);
+        body.localRotation = Quaternion.Euler(0f, BodyRotationY, 0f);
     }
 
+    void FPSNeckControll()
+    {
+        float mouseY = InputMouse.Instance.Y;
+
+        NeckRotationY += mouseY * sensitivity;
+
+        // 回転をY軸方向に反映（体は地面に対して水平回転）
+        neck.localRotation = Quaternion.Euler(0f, NeckRotationY, 0f);
+    }
 
 
     private void OnEnable()

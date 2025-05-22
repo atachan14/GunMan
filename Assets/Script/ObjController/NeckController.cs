@@ -7,9 +7,11 @@ public class NeckController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (RoundManager.Instance.IsFPS)
-        {
-            neck.LookAt(sight);
-        }
+        //if (RoundManager.Instance.IsFPS)
+        //{
+        //    neck.LookAt(sight);
+        //}
+
+
     }
 }

@@ -399,12 +399,12 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 330585543}
   serializedVersion: 2
-  m_LocalRotation: {x: -0, y: 0.043619405, z: -0, w: 0.99904823}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalRotation: {x: -0, y: -0.13052624, z: -0, w: 0.9914448}
+  m_LocalPosition: {x: 2.9071727, y: 1.2, z: -7.9873867}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 1606747997}
+  m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &330585547
 MonoBehaviour:
@@ -463,7 +463,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   tpsAnchor: {fileID: 1606747997}
-  eyeAnchor: {fileID: 3956861031677309036}
+  FPSAnchor: {fileID: 3956861031677309036}
   openingAnchor: {fileID: 533245948}
   centerPoint: {fileID: 855669933}
   muzzlePoint: {fileID: 1488087373}
@@ -1601,8 +1601,7 @@ Transform:
   m_LocalPosition: {x: 0, y: 0, z: -8.5}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
-  m_Children:
-  - {fileID: 330585546}
+  m_Children: []
   m_Father: {fileID: 855669933}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1672060509
@@ -4601,6 +4600,7 @@ MonoBehaviour:
   shoulder: {fileID: 6236978138201972582}
   body: {fileID: 978406099}
   hand: {fileID: 5805835711774454268}
+  neck: {fileID: 0}
   mouseNavi: {fileID: 261003924}
   cameraController: {fileID: 330585548}
   sensitivity: 5
@@ -4769,6 +4769,7 @@ GameObject:
 SceneRoots:
   m_ObjectHideFlags: 0
   m_Roots:
+  - {fileID: 330585546}
   - {fileID: 410087041}
   - {fileID: 832575519}
   - {fileID: 1959065091}
