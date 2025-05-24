@@ -41,6 +41,8 @@ public class RoundManager : MonoBehaviour
 
     private void Awake()
     {
+        Application.targetFrameRate = 60;
+
         if (Instance != null)
         {
             Debug.LogError($"[RoundManager] 2個目生成されたのでDestroyします。Editorに戻って構造確認せぇ！");
@@ -48,6 +50,7 @@ public class RoundManager : MonoBehaviour
             return;
         }
         Instance = this;
+
     }
 
     void Start()

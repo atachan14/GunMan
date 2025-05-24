@@ -3,7 +3,7 @@ using Unity.VisualScripting;
 using Unity.VisualScripting.Dependencies.Sqlite;
 using UnityEngine;
 
-public class AimController : MonoBehaviour
+public class AimManager : MonoBehaviour
 {
     [SerializeField] Transform shoulder; // arm_stretch.r
     [SerializeField] Transform body;
@@ -33,7 +33,7 @@ public class AimController : MonoBehaviour
             FPSArmControll();
             FPSHandControll();
             FPSBodyControll();
-            FPSNeckControll();
+            //FPSNeckControll();
         }
     }
 
@@ -88,7 +88,6 @@ public class AimController : MonoBehaviour
 
         NeckRotationY += mouseY * sensitivity;
 
-        // ‰ñ“]‚ğY²•ûŒü‚É”½‰fi‘Ì‚Í’n–Ê‚É‘Î‚µ‚Ä…•½‰ñ“]j
         neck.localRotation = Quaternion.Euler(0f, NeckRotationY, 0f);
     }
 

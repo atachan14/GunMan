@@ -38,6 +38,7 @@ public class ArmNaviController : MonoBehaviour
         }
 
         FollowMouse();
+        CheckMouseRaycast();
         UpdateColor();
     }
 
@@ -45,13 +46,23 @@ public class ArmNaviController : MonoBehaviour
     {
         MouseNaviImage.transform.position = InputMouse.Instance.Position;
 
-        Vector3 screenPos = InputMouse.Instance.Position;
-        screenPos.z = Mathf.Abs(Camera.main.transform.position.z - Gun.position.z); // Ç±Ç±ÅIzÇêÊÇ…åàÇﬂÇÈÅI
-
-        Vector3 worldPos = Camera.main.ScreenToWorldPoint(screenPos);
-        transform.position = worldPos;
+        //Vector3 screenPos = InputMouse.Instance.Position;
+        //screenPos.z = Mathf.Abs(Camera.main.transform.position.z - Gun.position.z); // Å©Ç±Ç±ÅI
+        //Vector3 worldPos = Camera.main.ScreenToWorldPoint(screenPos);
+        //transform.position = worldPos;
     }
+    void CheckMouseRaycast()
+    {
+        Ray ray = Camera.main.ScreenPointToRay(InputMouse.Instance.Position);
 
+        if (Physics.Raycast(ray, out RaycastHit hit, Mathf.Infinity))
+        {
+            if (hit.collider.CompareTag("ShoulderToGunWall"))
+            {
+                transform.position = Vector3.Lerp(transform.position, hit.point, Time.deltaTime * 10f); 
+            }
+        }
+    }
     void UpdateColor()
     {
         MouseNaviImage.color = modeColors[Mode];

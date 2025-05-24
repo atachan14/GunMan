@@ -18,23 +18,14 @@ public class TPSAnchorController : MonoBehaviour
 
     private void HandleRoundModeChanged(RoundMode mode)
     {
-        if (mode == RoundMode.Opening)
-        {
-            isRotating = false;
-        }
-        else
-        {
-            isRotating = true;
-        }
+        
     }
 
     void Update()
     {
-        if (isRotating)
-        {
+       
             transform.Rotate(Vector3.up, rotationSpeed * Time.deltaTime);
-        }
-
+        
     }
 
 }

@@ -9,6 +9,7 @@ TagManager:
   - GetGun
   - ArmReach
   - GunReach
+  - ShoulderToGunWall
   layers:
   - Default
   - TransparentFX
