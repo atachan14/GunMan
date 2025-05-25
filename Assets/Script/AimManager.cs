@@ -2,10 +2,11 @@ using Unity.Burst.Intrinsics;
 using Unity.VisualScripting;
 using Unity.VisualScripting.Dependencies.Sqlite;
 using UnityEngine;
+using UnityEngine.XR;
 
 public class AimManager : MonoBehaviour
 {
-    [SerializeField] Transform shoulder; // arm_stretch.r
+    [SerializeField] Transform arm_stretch; // arm_stretch.r
     [SerializeField] Transform body;
     [SerializeField] Transform hand;
     [SerializeField] Transform neck;
@@ -14,7 +15,7 @@ public class AimManager : MonoBehaviour
 
     //fps↓
     [SerializeField] float sensitivity = 5f; // 好きに調整して
-    float shoulderRotationX = 0f;
+    float armRotationX = 0f;
     float handRotationY = 0f;
     float BodyRotationY = 0f;
     float NeckRotationY = 0f;
@@ -22,7 +23,6 @@ public class AimManager : MonoBehaviour
 
     void LateUpdate()
     {
-
         if (RoundManager.Instance.IsTPS)
         {
             TPSArmControll();
@@ -31,45 +31,47 @@ public class AimManager : MonoBehaviour
         if (RoundManager.Instance.IsFPS)
         {
             FPSArmControll();
-            FPSHandControll();
+
             FPSBodyControll();
             //FPSNeckControll();
         }
     }
 
+
+
     void TPSArmControll()
     {
         // 肩からマウス目標への方向ベクトル
-        Vector3 dir = mouseNavi.position - shoulder.position;
+        Vector3 dir = mouseNavi.position - arm_stretch.position;
 
         // ローカル座標に変換（肩の軸基準で方向を見る）
-        Vector3 localDir = shoulder.parent.InverseTransformDirection(dir);
+        Vector3 localDir = arm_stretch.parent.InverseTransformDirection(dir);
 
         // X軸だけ回したいので、XZ平面での角度を求める（ピッチ角）
         float pitchAngle = Mathf.Atan2(-localDir.y, localDir.z) * Mathf.Rad2Deg;
 
         // 肩のX軸だけ回転（他軸はそのまま）
-        shoulder.localRotation = Quaternion.Euler(pitchAngle + 90, 0, 0f);
+        arm_stretch.localRotation = Quaternion.Euler(pitchAngle + 90, 0, 0f);
     }
     void FPSArmControll()
     {
         float mouseY = InputMouse.Instance.Y;
-        shoulderRotationX += mouseY * sensitivity;
-        shoulderRotationX = Mathf.Clamp(shoulderRotationX, -180f, 90f);
+        armRotationX += mouseY * sensitivity;
+        armRotationX = Mathf.Clamp(armRotationX, -180f, 90f);
 
-        Vector3 current = shoulder.localEulerAngles;
-        shoulder.localEulerAngles = new Vector3(shoulderRotationX, current.y, current.z);
+        Vector3 current = arm_stretch.localEulerAngles;
+        arm_stretch.localEulerAngles = new Vector3(armRotationX, current.y, current.z);
     }
 
-    void FPSHandControll()
-    {
-        float mouseY = InputMouse.Instance.Y;
-        handRotationY -= mouseY * sensitivity;
-        handRotationY = Mathf.Clamp(handRotationY, -180f, 180f);
+    //void FPSHandControll()
+    //{
+    //    float mouseY = InputMouse.Instance.Y;
+    //    handRotationY -= mouseY * sensitivity;
+    //    handRotationY = Mathf.Clamp(handRotationY, -180f, 180f);
 
-        Vector3 current = hand.localEulerAngles;
-        hand.localEulerAngles = new Vector3(current.x, handRotationY, current.z);
-    }
+    //    Vector3 current = hand.localEulerAngles;
+    //    hand.localEulerAngles = new Vector3(current.x, handRotationY, current.z);
+    //}
 
 
     void FPSBodyControll()
@@ -104,12 +106,28 @@ public class AimManager : MonoBehaviour
 
     private void HandleRoundModeChanged(RoundMode mode)
     {
+        if (mode == RoundMode.TPS)
+        {
+            TPSHandSetup();
+            Debug.Log("tps");
+        }
+
         if (mode == RoundMode.FPS)
         {
-            shoulderRotationX = NormalizeAngle(shoulder.localEulerAngles.x);
-            handRotationY = NormalizeAngle(hand.localEulerAngles.y);
+            armRotationX = NormalizeAngle(arm_stretch.localEulerAngles.x);
+            FPSHandSetup();
         }
     }
+    void TPSHandSetup()
+    {
+        hand.localRotation = Quaternion.identity;
+    }
+    void FPSHandSetup()
+    {
+        hand.localRotation = Quaternion.Euler(0, -90, 0);
+    }
+
+
     float NormalizeAngle(float angle)
     {
         angle %= 360;
