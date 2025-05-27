@@ -4,8 +4,11 @@ using Unity.VisualScripting.Dependencies.Sqlite;
 using UnityEngine;
 using UnityEngine.XR;
 
-public class AimManager : MonoBehaviour
+public class AimReceiver : MonoBehaviour
 {
+    [SerializeField] private MonoBehaviour inputSource;
+    private IPlayerInput input => inputSource as IPlayerInput;
+
     [SerializeField] Transform arm_stretch; // arm_stretch.r
     [SerializeField] Transform body;
     [SerializeField] Transform hand;
@@ -55,7 +58,7 @@ public class AimManager : MonoBehaviour
     }
     void FPSArmControll()
     {
-        float mouseY = InputMouse.Instance.Y;
+        float mouseY = input.AimY;
         armRotationX += mouseY * sensitivity;
         armRotationX = Mathf.Clamp(armRotationX, -180f, 90f);
 
@@ -76,7 +79,7 @@ public class AimManager : MonoBehaviour
 
     void FPSBodyControll()
     {
-        float mouseX = InputMouse.Instance.X;
+        float mouseX = input.AimX;
 
         BodyRotationY += mouseX * sensitivity;
 
@@ -86,7 +89,7 @@ public class AimManager : MonoBehaviour
 
     void FPSNeckControll()
     {
-        float mouseY = InputMouse.Instance.Y;
+        float mouseY = input.AimY;
 
         NeckRotationY += mouseY * sensitivity;
 

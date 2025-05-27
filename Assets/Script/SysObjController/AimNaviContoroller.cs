@@ -12,6 +12,10 @@ public enum NaviMode
 
 public class ArmNaviController : MonoBehaviour
 {
+    [SerializeField] private MonoBehaviour inputSource;
+    private IPlayerInput input => inputSource as IPlayerInput;
+
+
     [SerializeField] Transform Gun;
     public Image MouseNaviImage;
     readonly Dictionary<NaviMode, Color> modeColors = new()
@@ -44,7 +48,7 @@ public class ArmNaviController : MonoBehaviour
 
     void FollowMouse()
     {
-        MouseNaviImage.transform.position = InputMouse.Instance.Position;
+        MouseNaviImage.transform.position = input.AimPosition;
 
         //Vector3 screenPos = InputMouse.Instance.Position;
         //screenPos.z = Mathf.Abs(Camera.main.transform.position.z - Gun.position.z); // Å©Ç±Ç±ÅI
@@ -54,7 +58,7 @@ public class ArmNaviController : MonoBehaviour
     void CheckMouseRaycast()
     {
 
-        Ray ray = Camera.main.ScreenPointToRay(InputMouse.Instance.Position);
+        Ray ray = Camera.main.ScreenPointToRay(input.AimPosition);
 
         if (Physics.Raycast(ray, out RaycastHit hit, Mathf.Infinity))
         {
