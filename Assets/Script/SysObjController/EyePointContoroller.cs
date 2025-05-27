@@ -2,11 +2,11 @@ using UnityEngine;
 
 public class EyePointContoroller : MonoBehaviour
 {
-    [SerializeField] Transform muzzlePoint;
+    [SerializeField] Transform SightPoint;
 
     void Update()
     {
-        transform.LookAt(muzzlePoint);
+        transform.LookAt(SightPoint);
 
     }
 }

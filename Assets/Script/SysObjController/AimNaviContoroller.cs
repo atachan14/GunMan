@@ -41,12 +41,12 @@ public class ArmNaviController : MonoBehaviour
             Mode = NaviMode.NotTPS;
         }
 
-        FollowMouse();
-        CheckMouseRaycast();
+        FollowMouseNavi();
+        FollowArmNavi();
         UpdateColor();
     }
 
-    void FollowMouse()
+    void FollowMouseNavi()
     {
         MouseNaviImage.transform.position = input.AimPosition;
 
@@ -55,7 +55,7 @@ public class ArmNaviController : MonoBehaviour
         //Vector3 worldPos = Camera.main.ScreenToWorldPoint(screenPos);
         //transform.position = worldPos;
     }
-    void CheckMouseRaycast()
+    void FollowArmNavi()
     {
 
         Ray ray = Camera.main.ScreenPointToRay(input.AimPosition);
