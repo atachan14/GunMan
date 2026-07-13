@@ -10,6 +10,12 @@ TagManager:
   - ArmReach
   - GunReach
   - ShoulderToGunWall
+  - Head
+  - Heart
+  - Body
+  - Arm
+  - Leg
+  - AnotherHit
   layers:
   - Default
   - TransparentFX
@@ -17,9 +23,9 @@ TagManager:
   - 
   - Water
   - UI
-  - 
-  - 
-  - 
+  - ShoulderWall
+  - ReticleTargetWall
+  - Body
   - 
   - 
   - 

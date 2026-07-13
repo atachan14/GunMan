@@ -15,7 +15,7 @@ public class ArmNaviController : MonoBehaviour
     [SerializeField] private MonoBehaviour inputSource;
     private IPlayerInput input => inputSource as IPlayerInput;
 
-
+    [SerializeField] LayerMask shoulderWallLayer;
     [SerializeField] Transform Gun;
     public Image MouseNaviImage;
     readonly Dictionary<NaviMode, Color> modeColors = new()
@@ -57,15 +57,11 @@ public class ArmNaviController : MonoBehaviour
     }
     void FollowArmNavi()
     {
-
         Ray ray = Camera.main.ScreenPointToRay(input.AimPosition);
 
-        if (Physics.Raycast(ray, out RaycastHit hit, Mathf.Infinity))
+        if (Physics.Raycast(ray, out RaycastHit hit, Mathf.Infinity, shoulderWallLayer))
         {
-            if (hit.collider.CompareTag("ShoulderToGunWall"))
-            {
-                transform.position = Vector3.Lerp(transform.position, hit.point, Time.deltaTime * 10f); 
-            }
+            transform.position = hit.point;
         }
     }
     void UpdateColor()
